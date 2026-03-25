@@ -400,6 +400,8 @@ Repository Secrets:
 - `R2_PUBLIC_BUCKET_NAME`: 公開用 R2 バケット名
 - `R2_PUBLIC_BASE_URL`: 配信 URL のベース（例: `https://pub-xxxx.r2.dev`）
 - `CAPACITOR_UPDATER_URL`: アプリが参照する `latest.json` の URL
+- `VITE_API_URL`: OTA 配信用 build が参照する backend base URL
+- `VITE_API_KEY`: OTA 配信用 build が参照する backend API key
 
 **動作**:
 
