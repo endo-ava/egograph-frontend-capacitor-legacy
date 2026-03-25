@@ -6,10 +6,14 @@
 
 このリポジトリには、EgoGraph の旧モバイル / Web クライアントが standalone repo として格納されています。
 
+EgoGraph エージェントと対話するための ChatGPT ライクなインターフェースで、旧世代のモバイルファースト実装を保存しています。
+
 - Runtime: React 19 + Vite 6 + TypeScript 5
 - Mobile shell: Capacitor 8 (Android)
 - State: TanStack Query + Zustand
 - Styling: Tailwind CSS 4
+- Mobile First: Android / Capacitor 向け UI を優先
+- Web Compatible: 標準的な SPA としても動作
 
 ## Repository Layout
 
@@ -18,6 +22,24 @@
 - `public/`: 静的アセットと manifest
 - `.github/workflows/ci.yml`: standalone 用 CI
 - `.github/workflows/deploy-capacitor-updater.yml`: OTA 配信用 workflow
+
+## Architecture
+
+- Framework: React 19 + Vite 6 + TypeScript 5
+- Mobile Runtime: Capacitor 8
+- UI System: Tailwind CSS 4 + shadcn/ui
+- State Management:
+  - Server State: TanStack Query
+  - Client State: Zustand
+
+### Key Directories
+
+- `src/components/chat/`: チャット UI コンポーネント
+- `src/lib/api.ts`: backend 接続用 API client
+- `src/hooks/`: UI / chat / thread 関連 hooks
+- `src/main.tsx`: CapacitorUpdater 初期化を含む app entry point
+- `docs/40.deploy/`: Legacy Capacitor の deploy / architecture docs
+- `docs/20.technical_selections/02_frontend.md`: 旧 frontend 技術選定記録
 
 ## Prerequisites
 
@@ -138,5 +160,6 @@ Capacitor 関連の旧ドキュメントは `docs/40.deploy/` に移動してい
 ## Troubleshooting
 
 - `401 Invalid API key`: backend が認証を有効化している場合は `VITE_API_KEY` を設定してください
+- CORS errors: backend 側で frontend origin が許可されているか確認してください
 - Android Gradle / plugin path が崩れた: `npm run android:sync` を再実行してください
 - OTA が有効化されない: `CAPACITOR_UPDATER_URL` と workflow secrets を確認してください
