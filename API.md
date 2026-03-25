@@ -1,18 +1,18 @@
 # API Contract
 
-This document covers every backend endpoint consumed by the legacy Capacitor frontend.
+このドキュメントは、legacy Capacitor frontend が利用する backend endpoint をまとめたものです。
 
 ## Common Behavior
 
-- Base URL comes from `VITE_API_URL`
-- All requests send `Content-Type: application/json`
-- `X-API-Key` is sent only when `VITE_API_KEY` is non-empty
-- The backend treats API-key auth as optional globally; when `BACKEND_API_KEY` is configured, missing or invalid keys return `401 Invalid API key`
-- Client errors are surfaced as `ApiRequestError(status, detail)` using the backend JSON field `detail` when present
+- Base URL は `VITE_API_URL` から取得します
+- すべての request は `Content-Type: application/json` を送ります
+- `VITE_API_KEY` が空でない場合のみ `X-API-Key` を送ります
+- backend 側の API key 認証は optional ですが、`BACKEND_API_KEY` が設定されている環境では無効または未指定の key に対して `401 Invalid API key` を返します
+- client 側では backend JSON の `detail` を使って `ApiRequestError(status, detail)` を生成します
 
 ## POST /v1/chat
 
-Send a chat request to the backend agent.
+LLM agent 用 chat request を送信します。
 
 ### Request body
 
@@ -29,10 +29,10 @@ Send a chat request to the backend agent.
 
 ### Fields
 
-- `messages`: array of `{ role, content }`
-- `stream`: optional boolean; `true` enables SSE streaming
-- `thread_id`: optional existing thread UUID/string
-- `model_name`: optional backend-supported model identifier
+- `messages`: `{ role, content }` の配列
+- `stream`: optional boolean。`true` の場合は SSE streaming
+- `thread_id`: optional。既存 thread の ID
+- `model_name`: optional。backend がサポートする model identifier
 
 ### Non-stream response
 
@@ -53,7 +53,7 @@ Send a chat request to the backend agent.
 
 ### Stream response
 
-When `stream=true`, the same endpoint returns `text/event-stream` SSE chunks. The client parses `data: ...` payloads into:
+`stream=true` の場合、同じ endpoint は `text/event-stream` を返します。client は `data: ...` payload を次の chunk type として解釈します。
 
 - `delta`
 - `tool_call`
@@ -63,14 +63,14 @@ When `stream=true`, the same endpoint returns `text/event-stream` SSE chunks. Th
 
 ### Tested error behavior
 
-- `400 invalid_model_name: ...` for unsupported `model_name` (`backend/tests/integration/test_api_chat_models.py`)
-- `400 At least one user message is required` when no user message exists (`backend/tests/integration/test_chat_history.py`)
-- `404 Thread not found: ...` when `thread_id` does not exist (`backend/tests/integration/test_chat_history.py`)
-- `401 Invalid API key` when auth is enforced and header is missing/invalid (`backend/dependencies.py` + integration tests)
+- `400 invalid_model_name: ...`：未対応 `model_name`（`backend/tests/integration/test_api_chat_models.py`）
+- `400 At least one user message is required`：user message がない（`backend/tests/integration/test_chat_history.py`）
+- `404 Thread not found: ...`：存在しない `thread_id`（`backend/tests/integration/test_chat_history.py`）
+- `401 Invalid API key`：認証有効時に key 不正または未指定（`backend/dependencies.py` と integration tests）
 
 ## GET /v1/chat/models
 
-Fetch the list of selectable LLM models.
+選択可能な LLM model 一覧を取得します。
 
 ### Response
 
@@ -92,16 +92,16 @@ Fetch the list of selectable LLM models.
 
 ### Tested error behavior
 
-- `401 Invalid API key` without a valid key when auth is enabled (`backend/tests/integration/test_api_chat_models.py`)
+- `401 Invalid API key`：認証有効時に有効な key がない（`backend/tests/integration/test_api_chat_models.py`）
 
 ## GET /v1/threads
 
-Fetch paginated thread summaries.
+thread summary の paginated list を取得します。
 
 ### Query parameters
 
-- `limit`: integer, validated server-side with minimum/maximum bounds
-- `offset`: integer, `>= 0`
+- `limit`: integer。backend 側で最小値 / 最大値を検証
+- `offset`: integer。`>= 0`
 
 ### Example
 
@@ -130,23 +130,23 @@ Fetch paginated thread summaries.
 
 ### Tested error behavior
 
-- `422` when `limit` exceeds the backend maximum (`backend/tests/integration/test_threads_api.py`)
+- `422`：`limit` が backend 最大値を超える（`backend/tests/integration/test_threads_api.py`）
 
 ## GET /v1/threads/{thread_id}
 
-Fetch a single thread summary.
+単一 thread summary を取得します。
 
 ### Response
 
-Same thread object shape as the items returned by `GET /v1/threads`.
+`GET /v1/threads` の各 item と同じ thread object shape を返します。
 
 ### Tested error behavior
 
-- `404 Thread not found: {thread_id}` when the thread does not exist (`backend/tests/integration/test_threads_api.py`, `backend/tests/integration/test_chat_history.py`)
+- `404 Thread not found: {thread_id}`：thread が存在しない（`backend/tests/integration/test_threads_api.py`, `backend/tests/integration/test_chat_history.py`）
 
 ## GET /v1/threads/{thread_id}/messages
 
-Fetch all saved messages for a thread in ascending creation order.
+指定 thread の保存済み message を作成日時昇順で取得します。
 
 ### Response
 
@@ -169,11 +169,11 @@ Fetch all saved messages for a thread in ascending creation order.
 
 ### Tested error behavior
 
-- `404 Thread not found: {thread_id}` when the thread does not exist (`backend/tests/integration/test_threads_api.py`, `backend/tests/integration/test_chat_history.py`)
+- `404 Thread not found: {thread_id}`：thread が存在しない（`backend/tests/integration/test_threads_api.py`, `backend/tests/integration/test_chat_history.py`）
 
 ## GET /v1/system-prompts/{name}
 
-Fetch a named system prompt file.
+名前付き system prompt file を取得します。
 
 ### Supported names
 
@@ -193,12 +193,12 @@ Fetch a named system prompt file.
 
 ### Tested error behavior
 
-- `400 invalid_name...` when `name` is unsupported (`backend/tests/integration/test_api_system_prompts.py`)
-- `401 Invalid API key` when auth is enabled and the header is missing/invalid (`backend/tests/integration/test_api_system_prompts.py`)
+- `400 invalid_name...`：未対応の `name`（`backend/tests/integration/test_api_system_prompts.py`）
+- `401 Invalid API key`：認証有効時に header が不正または未指定（`backend/tests/integration/test_api_system_prompts.py`）
 
 ## PUT /v1/system-prompts/{name}
 
-Persist a named system prompt file.
+名前付き system prompt file を更新します。
 
 ### Request body
 
@@ -219,4 +219,4 @@ Persist a named system prompt file.
 
 ### Tested error behavior
 
-- `400 invalid_name...` when `name` is unsupported (`backend/tests/integration/test_api_system_prompts.py`)
+- `400 invalid_name...`：未対応の `name`（`backend/tests/integration/test_api_system_prompts.py`）

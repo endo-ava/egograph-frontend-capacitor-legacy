@@ -1,10 +1,10 @@
 # EgoGraph Frontend Capacitor Legacy
 
-Legacy React + Capacitor frontend extracted from `endo-ava/ego-graph` with preserved history.
+`endo-ava/ego-graph` モノレポから履歴を保持したまま切り出した、Legacy React + Capacitor フロントエンドです。
 
 ## Overview
 
-This repository contains the standalone legacy mobile/web client for EgoGraph.
+このリポジトリには、EgoGraph の旧モバイル / Web クライアントが standalone repo として格納されています。
 
 - Runtime: React 19 + Vite 6 + TypeScript 5
 - Mobile shell: Capacitor 8 (Android)
@@ -13,52 +13,52 @@ This repository contains the standalone legacy mobile/web client for EgoGraph.
 
 ## Repository Layout
 
-- `src/`: application source code
-- `android/`: Capacitor Android project
-- `public/`: static assets and manifest
-- `.github/workflows/ci.yml`: standalone CI
-- `.github/workflows/deploy-capacitor-updater.yml`: OTA asset deployment workflow
+- `src/`: アプリケーション本体
+- `android/`: Capacitor Android プロジェクト
+- `public/`: 静的アセットと manifest
+- `.github/workflows/ci.yml`: standalone 用 CI
+- `.github/workflows/deploy-capacitor-updater.yml`: OTA 配信用 workflow
 
 ## Prerequisites
 
 - Node.js 20+
 - npm 10+
-- Android Studio (for Android builds)
-- A running EgoGraph backend for app usage
+- Android Studio（Android ビルド時）
+- 利用対象の EgoGraph backend
 
 ## Environment Variables
 
-Create `.env` from `.env.example`.
+`.env.example` をもとに `.env` を作成してください。
 
-Required for normal app usage:
+通常利用で必要:
 
-- `VITE_API_URL`: backend base URL, for example `http://localhost:8000`
-- `VITE_API_KEY`: optional API key header value for backends that require `X-API-Key`
-- `VITE_DEBUG`: `true` to enable API debug logging, otherwise `false`
+- `VITE_API_URL`: backend の base URL。例: `http://localhost:8000`
+- `VITE_API_KEY`: backend が `X-API-Key` を要求する場合に送る API key
+- `VITE_DEBUG`: API デバッグログを有効にする場合は `true`、通常は `false`
 
-Optional for Capacitor OTA setup:
+Capacitor OTA で任意:
 
-- `CAPACITOR_UPDATER_URL`: URL to `latest.json` used by Capgo / Capacitor Updater during `npx cap sync` and release builds
+- `CAPACITOR_UPDATER_URL`: `latest.json` の URL。`npx cap sync` や release build 時に利用されます
 
 ## Local Development
 
-Install dependencies from the repository root:
+依存関係のインストール:
 
 ```bash
 npm ci
 ```
 
-Run the web development server:
+Web 開発サーバー起動:
 
 ```bash
 npm run dev
 ```
 
-Default Vite dev URL: `http://localhost:5174`
+既定の Vite URL は `http://localhost:5174` です。
 
 ## Verification Commands
 
-Run the same baseline locally and in CI:
+ローカルでも CI でも、以下を基準コマンドとして使用します。
 
 ```bash
 npm run lint
@@ -69,40 +69,40 @@ npm run test:run
 
 ## Android / Capacitor Notes
 
-Initialize Android only if the `android/` project does not exist:
+`android/` が存在しない場合のみ Android 初期化を実行します。
 
 ```bash
 npm run android:init
 ```
 
-Sync web assets and regenerate Capacitor-managed Android files:
+Web アセット同期と Capacitor 管理ファイルの再生成:
 
 ```bash
 npm run build
 npm run android:sync
 ```
 
-Open the Android project:
+Android Studio を開く:
 
 ```bash
 npm run android:open
 ```
 
-Important:
+補足:
 
-- `android/capacitor.settings.gradle` and `android/app/capacitor.build.gradle` are generated files
-- after dependency or plugin changes, run `npm run android:sync` again
-- OTA configuration is only injected when `CAPACITOR_UPDATER_URL` is set
+- `android/capacitor.settings.gradle` と `android/app/capacitor.build.gradle` は生成ファイルです
+- 依存関係や plugin 構成が変わったら `npm run android:sync` を再実行してください
+- OTA 設定は `CAPACITOR_UPDATER_URL` が設定されている場合のみ注入されます
 
 ## OTA / Capacitor Updater
 
-The app still supports Capgo OTA updates.
+このアプリは引き続き Capgo OTA update をサポートします。
 
-- Runtime integration lives in `src/main.tsx` via `CapacitorUpdater.notifyAppReady()`
-- build-time configuration lives in `capacitor.config.ts`
-- deployment automation lives in `.github/workflows/deploy-capacitor-updater.yml`
+- runtime 側 integration: `src/main.tsx` の `CapacitorUpdater.notifyAppReady()`
+- build 時設定: `capacitor.config.ts`
+- 配信 automation: `.github/workflows/deploy-capacitor-updater.yml`
 
-GitHub Actions secrets expected by the OTA workflow:
+OTA workflow で期待する GitHub Actions secrets:
 
 - `R2_ACCESS_KEY_ID`
 - `R2_SECRET_ACCESS_KEY`
@@ -115,7 +115,7 @@ GitHub Actions secrets expected by the OTA workflow:
 
 ## Backend Contract
 
-This client consumes these backend endpoints:
+この client が利用する backend endpoint は以下です。
 
 - `POST /v1/chat`
 - `GET /v1/chat/models`
@@ -125,10 +125,10 @@ This client consumes these backend endpoints:
 - `GET /v1/system-prompts/{name}`
 - `PUT /v1/system-prompts/{name}`
 
-See [API.md](./API.md) for request/response shapes and tested error behavior.
+request / response shape や error behavior は [API.md](./API.md) を参照してください。
 
 ## Troubleshooting
 
-- `401 Invalid API key`: set `VITE_API_KEY` to a valid backend key when the backend enforces authentication
-- Android Gradle/plugin path issues after dependency changes: run `npm run android:sync`
-- OTA not activating: confirm `CAPACITOR_UPDATER_URL` is set for the build and that the deploy workflow secrets exist
+- `401 Invalid API key`: backend が認証を有効化している場合は `VITE_API_KEY` を設定してください
+- Android Gradle / plugin path が崩れた: `npm run android:sync` を再実行してください
+- OTA が有効化されない: `CAPACITOR_UPDATER_URL` と workflow secrets を確認してください
