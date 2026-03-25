@@ -127,6 +127,14 @@ OTA workflow で期待する GitHub Actions secrets:
 
 request / response shape や error behavior は [API.md](./API.md) を参照してください。
 
+
+## Legacy Deploy Docs
+
+Capacitor 関連の旧ドキュメントは `docs/40.deploy/` に移動しています。
+
+- `docs/40.deploy/frontend-android-capacitor.md`
+- `docs/40.deploy/capacitor.md`
+
 ## Troubleshooting
 
 - `401 Invalid API key`: backend が認証を有効化している場合は `VITE_API_KEY` を設定してください
