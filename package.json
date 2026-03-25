@@ -15,8 +15,7 @@
     "test:coverage": "vitest --run --coverage",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier --write \"**/*.{ts,tsx,json,css,md}\"",
-    "prepare": "cd .. && husky frontend/.husky"
+    "format": "prettier --write \"**/*.{ts,tsx,json,css,md}\""
   },
   "dependencies": {
     "@capacitor/android": "^8.0.0",
