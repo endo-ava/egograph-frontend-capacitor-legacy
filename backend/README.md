@@ -26,3 +26,9 @@ uv run ruff check backend
 
 - chat 履歴 SQLite は `backend/data/chat.sqlite` に保存されます
 - frontend から接続する場合は `frontend/.env` の `VITE_API_URL` をこの backend に向けてください
+
+## Docs
+
+- `docs/architecture.md`
+- `docs/tool-system.md`
+- `docs/streaming.md`
