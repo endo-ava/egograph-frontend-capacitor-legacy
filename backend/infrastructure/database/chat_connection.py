@@ -6,7 +6,7 @@
 import logging
 import sqlite3
 
-from egograph_paths import CHAT_SQLITE_PATH
+from backend.paths import CHAT_SQLITE_PATH
 
 logger = logging.getLogger(__name__)
 

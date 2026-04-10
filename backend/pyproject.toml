@@ -29,10 +29,14 @@ dependencies = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["backend"]
+packages = ["."]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = [".."]
 
 [tool.hatch.build]
-dev-mode-dirs = ["."]
+dev-mode-dirs = [".."]
 
 [dependency-groups]
 dev = [

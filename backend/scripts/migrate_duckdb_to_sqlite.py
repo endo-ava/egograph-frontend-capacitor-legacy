@@ -25,7 +25,7 @@ import sys
 from pathlib import Path
 
 import duckdb
-from egograph_paths import CHAT_SQLITE_PATH, LEGACY_CHAT_DUCKDB_PATH
+from backend.paths import CHAT_SQLITE_PATH, LEGACY_CHAT_DUCKDB_PATH
 
 logging.basicConfig(
     level=logging.INFO,

@@ -1,4 +1,4 @@
-"""Legacy backend 用のランタイムパス定義。"""
+"""Backend 用ランタイムパス定義。"""
 
 from pathlib import Path
 

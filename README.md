@@ -17,13 +17,24 @@ EgoGraph エージェントと対話するための ChatGPT ライクなイン�
 
 ## Repository Layout
 
-- `frontend/`: Legacy React + Capacitor frontend
-- `frontend/src/`: アプリケーション本体
-- `frontend/android/`: Capacitor Android プロジェクト
-- `frontend/public/`: 静的アセットと manifest
-- `backend/`: legacy frontend 専用 backend
-- `.github/workflows/ci.yml`: standalone 用 CI
-- `.github/workflows/deploy-capacitor-updater.yml`: OTA 配信用 workflow
+```text
+.
+├── frontend/          # Legacy React + Capacitor frontend
+│   ├── src/           # アプリケーション本体
+│   ├── android/       # Capacitor Android プロジェクト
+│   └── public/        # 静的アセットと manifest
+├── backend/           # legacy frontend 専用 backend (FastAPI)
+│   ├── api/           # API Layer
+│   ├── usecases/      # UseCase Layer
+│   ├── domain/        # Domain Layer
+│   ├── infrastructure/# Infrastructure Layer
+│   └── tests/         # テストスイート
+├── docs/              # プロジェクトドキュメント
+│   ├── 20.technical_selections/
+│   ├── 30.backend/    # Backend 関連 (architecture, streaming, tool-system)
+│   └── 40.deploy/     # Deploy 関連 (Capacitor)
+└── .github/workflows/ # CI / OTA 配信
+```
 
 ## Architecture
 
@@ -40,6 +51,8 @@ EgoGraph エージェントと対話するための ChatGPT ライクなイン�
 - `frontend/src/lib/api.ts`: backend 接続用 API client
 - `frontend/src/hooks/`: UI / chat / thread 関連 hooks
 - `frontend/src/main.tsx`: CapacitorUpdater 初期化を含む app entry point
+- `backend/`: FastAPI chat backend — 詳細は [backend/README.md](./backend/README.md) を参照
+- `docs/30.backend/`: Backend アーキテクチャ・ツールシステム・ストリーミング
 - `docs/40.deploy/`: Legacy Capacitor の deploy / architecture docs
 - `docs/20.technical_selections/02_frontend.md`: 旧 frontend 技術選定記録
 
@@ -160,15 +173,16 @@ request / response shape や error behavior は [API.md](./API.md) を参照し�
 ## Current Status
 
 - `frontend/` への再編は完了済み
-- `backend/` は legacy chat API を同居させるために追加済み
+- `backend/` は legacy chat API を同居 (クリーンアーキテクチャ構成)
 
+## Docs
 
-## Legacy Deploy Docs
-
-Capacitor 関連の旧ドキュメントは `docs/40.deploy/` に移動しています。
-
-- `docs/40.deploy/frontend-android-capacitor.md`
-- `docs/40.deploy/capacitor.md`
+- [Frontend 技術選定](docs/20.technical_selections/02_frontend.md)
+- [Backend Architecture](docs/30.backend/01_architecture.md)
+- [Backend Streaming](docs/30.backend/02_streaming.md)
+- [Backend Tool System](docs/30.backend/03_tool-system.md)
+- [Capacitor Deploy](docs/40.deploy/capacitor.md)
+- [Android Capacitor 詳細](docs/40.deploy/frontend-android-capacitor.md)
 
 ## Troubleshooting
 

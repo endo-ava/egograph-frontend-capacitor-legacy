@@ -1,1 +1,0 @@
-"""EgoGraph Backend テストスイート。"""

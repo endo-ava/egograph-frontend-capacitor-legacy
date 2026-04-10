@@ -6,7 +6,7 @@
 import logging
 import os
 
-from egograph_paths import PARQUET_DATA_DIR
+from backend.paths import PARQUET_DATA_DIR
 from pydantic import BaseModel, Field, SecretStr, ValidationError
 from pydantic_settings import BaseSettings, SettingsConfigDict
 

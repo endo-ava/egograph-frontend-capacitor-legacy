@@ -3,7 +3,7 @@
 from unittest.mock import patch
 
 import pytest
-from egograph_paths import PARQUET_DATA_DIR
+from backend.paths import PARQUET_DATA_DIR
 from pydantic import SecretStr, ValidationError
 
 from backend.config import BackendConfig, LLMConfig, R2Settings

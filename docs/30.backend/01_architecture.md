@@ -86,5 +86,5 @@ backend/
 ## 補足
 
 - SQLite の保存先は `backend/data/chat.sqlite`
-- `backend/egograph_paths.py` で backend ローカルの実行パスを管理
+- `backend/paths.py` で backend ローカルの実行パスを管理
 - R2 設定がある場合のみ、Spotify / GitHub / Browser History 系ツールを有効化
