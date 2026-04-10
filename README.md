@@ -1,10 +1,10 @@
 # EgoGraph Frontend Capacitor Legacy
 
-`endo-ava/ego-graph` モノレポから履歴を保持したまま切り出した、Legacy React + Capacitor フロントエンドです。
+`endo-ava/ego-graph` モノレポから切り出した、legacy app 用の repository です。
 
 ## Overview
 
-このリポジトリには、EgoGraph の旧モバイル / Web クライアントが standalone repo として格納されています。
+このリポジトリには、EgoGraph の旧モバイル / Web クライアントと、そのクライアント専用 backend を同居させて管理します。
 
 EgoGraph エージェントと対話するための ChatGPT ライクなインターフェースで、旧世代のモバイルファースト実装を保存しています。
 
@@ -17,9 +17,11 @@ EgoGraph エージェントと対話するための ChatGPT ライクなイン�
 
 ## Repository Layout
 
-- `src/`: アプリケーション本体
-- `android/`: Capacitor Android プロジェクト
-- `public/`: 静的アセットと manifest
+- `frontend/`: Legacy React + Capacitor frontend
+- `frontend/src/`: アプリケーション本体
+- `frontend/android/`: Capacitor Android プロジェクト
+- `frontend/public/`: 静的アセットと manifest
+- `backend/`: legacy frontend 専用 backend
 - `.github/workflows/ci.yml`: standalone 用 CI
 - `.github/workflows/deploy-capacitor-updater.yml`: OTA 配信用 workflow
 
@@ -34,10 +36,10 @@ EgoGraph エージェントと対話するための ChatGPT ライクなイン�
 
 ### Key Directories
 
-- `src/components/chat/`: チャット UI コンポーネント
-- `src/lib/api.ts`: backend 接続用 API client
-- `src/hooks/`: UI / chat / thread 関連 hooks
-- `src/main.tsx`: CapacitorUpdater 初期化を含む app entry point
+- `frontend/src/components/chat/`: チャット UI コンポーネント
+- `frontend/src/lib/api.ts`: backend 接続用 API client
+- `frontend/src/hooks/`: UI / chat / thread 関連 hooks
+- `frontend/src/main.tsx`: CapacitorUpdater 初期化を含む app entry point
 - `docs/40.deploy/`: Legacy Capacitor の deploy / architecture docs
 - `docs/20.technical_selections/02_frontend.md`: 旧 frontend 技術選定記録
 
@@ -50,7 +52,7 @@ EgoGraph エージェントと対話するための ChatGPT ライクなイン�
 
 ## Environment Variables
 
-`.env.example` をもとに `.env` を作成してください。
+`frontend/.env.example` をもとに `frontend/.env` を作成してください。
 
 通常利用で必要:
 
@@ -67,12 +69,14 @@ Capacitor OTA で任意:
 依存関係のインストール:
 
 ```bash
+cd frontend
 npm ci
 ```
 
 Web 開発サーバー起動:
 
 ```bash
+cd frontend
 npm run dev
 ```
 
@@ -83,6 +87,7 @@ npm run dev
 ローカルでも CI でも、以下を基準コマンドとして使用します。
 
 ```bash
+cd frontend
 npm run lint
 npx tsc --noEmit
 npm run build
@@ -91,15 +96,17 @@ npm run test:run
 
 ## Android / Capacitor Notes
 
-`android/` が存在しない場合のみ Android 初期化を実行します。
+`frontend/android/` が存在しない場合のみ Android 初期化を実行します。
 
 ```bash
+cd frontend
 npm run android:init
 ```
 
 Web アセット同期と Capacitor 管理ファイルの再生成:
 
 ```bash
+cd frontend
 npm run build
 npm run android:sync
 ```
@@ -107,12 +114,13 @@ npm run android:sync
 Android Studio を開く:
 
 ```bash
+cd frontend
 npm run android:open
 ```
 
 補足:
 
-- `android/capacitor.settings.gradle` と `android/app/capacitor.build.gradle` は生成ファイルです
+- `frontend/android/capacitor.settings.gradle` と `frontend/android/app/capacitor.build.gradle` は生成ファイルです
 - 依存関係や plugin 構成が変わったら `npm run android:sync` を再実行してください
 - OTA 設定は `CAPACITOR_UPDATER_URL` が設定されている場合のみ注入されます
 
@@ -120,8 +128,8 @@ npm run android:open
 
 このアプリは引き続き Capgo OTA update をサポートします。
 
-- runtime 側 integration: `src/main.tsx` の `CapacitorUpdater.notifyAppReady()`
-- build 時設定: `capacitor.config.ts`
+- runtime 側 integration: `frontend/src/main.tsx` の `CapacitorUpdater.notifyAppReady()`
+- build 時設定: `frontend/capacitor.config.ts`
 - 配信 automation: `.github/workflows/deploy-capacitor-updater.yml`
 
 OTA workflow で期待する GitHub Actions secrets:
@@ -148,6 +156,11 @@ OTA workflow で期待する GitHub Actions secrets:
 - `PUT /v1/system-prompts/{name}`
 
 request / response shape や error behavior は [API.md](./API.md) を参照してください。
+
+## Current Status
+
+- `frontend/` への再編は完了済み
+- `backend/` は legacy chat API を同居させるために追加済み
 
 
 ## Legacy Deploy Docs
