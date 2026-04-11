@@ -63,7 +63,7 @@ $env:PATH += ";$env:ANDROID_HOME\platform-tools"
 
 本番バックエンドの URL と API Key を設定する。
 
-`.env` ファイルを作成:
+`frontend/.env` ファイルを作成:
 
 必須設定項目:
 
@@ -81,13 +81,14 @@ VITE_DEBUG=false
 ### 2.2 Android プロジェクト初期化
 
 初回のみ実行。
-Capacitor が `android/` ディレクトリを生成する。
+Capacitor が `frontend/android/` ディレクトリを生成する。
 
 ```bash
+cd frontend
 npm run android:init
 ```
 
-既に `android/` がある場合はスキップして可。
+既に `frontend/android/` がある場合はスキップして可。
 
 ## 3. 開発ビルド（デバッグ）
 
@@ -96,42 +97,45 @@ npm run android:init
 
 ### 3.1 Web アセットビルド
 
-React アプリをビルドし、`dist/` に出力:
+React アプリをビルドし、`frontend/dist/` に出力:
 
 ```bash
+cd frontend
 npm run build
 ```
 
 ### 3.2 Capacitor 同期
 
-Web アセット (`dist/`) を Android プロジェクトに同期:
+Web アセット (`frontend/dist/`) を Android プロジェクトに同期:
 
 ```bash
+cd frontend
 npm run android:sync
 ```
 
 これにより、以下が実行される:
 
-- `dist/` の内容を `android/app/src/main/assets/public/` にコピー
-- `capacitor.config.ts` の設定を反映
+- `frontend/dist/` の内容を `frontend/android/app/src/main/assets/public/` にコピー
+- `frontend/capacitor.config.ts` の設定を反映
 - ネイティブプラグインを同期
 
 ### 3.3 Android Studio で実行
 
-Android Studio を別マシンで実行する場合は `android/` をそのマシンへコピーする:
+Android Studio を別マシンで実行する場合は `frontend/android/` をそのマシンへコピーする:
 
 ```bash
 ## Windowsで実行
-scp -r user@hostname:/root/workspace/egograph-frontend-capacitor-legacy/android C:\Users\username\ego-graph\frontend\
+scp -r user@hostname:/root/workspace/egograph-frontend-capacitor-legacy/frontend/android C:\Users\username\ego-graph\frontend\
 ```
 
 Android Studio を開く:
 
 ```bash
+cd frontend
 npm run android:open
 ```
 
-または、Android Studio から手動で `android/` を開く。
+または、Android Studio から手動で `frontend/android/` を開く。
 
 実行手順:
 
@@ -199,7 +203,7 @@ Android Studio で署名設定を行う。
 
 GitHub Actions 等でビルドする場合、`gradle.properties` に設定を記述。
 
-`android/gradle.properties` に追記:
+`frontend/android/gradle.properties` に追記:
 
 ```properties
 EGOGRAPH_RELEASE_STORE_FILE=../egograph-release.keystore
@@ -208,7 +212,7 @@ EGOGRAPH_RELEASE_STORE_PASSWORD=<your-password>
 EGOGRAPH_RELEASE_KEY_PASSWORD=<your-password>
 ```
 
-`android/app/build.gradle` に署名設定を追加:
+`frontend/android/app/build.gradle` に署名設定を追加:
 
 ```gradle
 android {
@@ -242,10 +246,10 @@ Capacitor の OS 非依存な仕組み（アーキテクチャ、プラグイン
 
 ### 5.1 ディレクトリ構造
 
-`npm run android:init` で生成される `android/` ディレクトリは、標準的な Android プロジェクト。
+`cd frontend && npm run android:init` で生成される `frontend/android/` ディレクトリは、標準的な Android プロジェクト。
 
 ```
-android/
+frontend/android/
 ├── app/
 │   ├── src/main/
 │   │   ├── assets/public/          # Webアセット配置先（npm run android:syncで自動生成）
@@ -293,8 +297,8 @@ Gradle の役割:
 
 出力先:
 
-- APK: `android/app/build/outputs/apk/release/app-release.apk`
-- AAB: `android/app/build/outputs/bundle/release/app-release.aab`
+- APK: `frontend/android/app/build/outputs/apk/release/app-release.apk`
+- AAB: `frontend/android/app/build/outputs/bundle/release/app-release.aab`
 
 ## 6. 直接 APK 配布
 
@@ -318,12 +322,13 @@ Google Play を使わず APK を直接配布する場合。
 
 **前提**: 4 をスキップしている場合は debug APK でインストールする。
 
-1. `android/` でビルド:
+1. `frontend/android/` でビルド:
    ```bash
+   cd frontend/android
    ./gradlew assembleDebug
    ```
 2. APK を端末へコピー:
-   - USB 接続で `android/app/build/outputs/apk/debug/app-debug.apk` を転送
+   - USB 接続で `frontend/android/app/build/outputs/apk/debug/app-debug.apk` を転送
    - または、ファイル共有（Tailscale, Google Drive 等）で端末へ送る
 3. 端末で APK を開き、インストール
 4. 初回のみ「提供元不明のアプリ」許可が必要
@@ -363,7 +368,7 @@ adb version
    ```
 5. インストール:
    ```powershell
-   adb install -r C:\Users\<username>\egograph-frontend-capacitor-legacy\android\app\build\outputs\apk\debug\app-debug.apk
+   adb install -r C:\Users\<username>\egograph-frontend-capacitor-legacy\frontend\android\app\build\outputs\apk\debug\app-debug.apk
    ```
 6. 終了:
    ```powershell
@@ -376,7 +381,7 @@ adb version
 
 ### 7.1 バージョン番号更新
 
-`android/app/build.gradle` の `versionCode` と `versionName` を更新:
+`frontend/android/app/build.gradle` の `versionCode` と `versionName` を更新:
 
 ```gradle
 android {
@@ -391,6 +396,7 @@ android {
 ### 7.2 ビルド
 
 ```bash
+cd frontend
 npm run build
 npm run android:sync
 cd android
@@ -478,7 +484,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: android/app/build/outputs/bundle/release/app-release.aab
+          path: frontend/android/app/build/outputs/bundle/release/app-release.aab
 ```
 
 この例では、AAB を Artifact として保存。

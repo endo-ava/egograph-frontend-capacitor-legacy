@@ -22,12 +22,14 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: 'package-lock.json'
+          cache-dependency-path: 'frontend/package-lock.json'
 
       - name: Install dependencies
+        working-directory: frontend
         run: npm ci
 
       - name: Build web assets
+        working-directory: frontend
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
           VITE_API_KEY: ${{ secrets.VITE_API_KEY }}
@@ -37,10 +39,10 @@ jobs:
       - name: Package updater assets
         run: |
           SHORT_SHA="$(echo "${GITHUB_SHA}" | cut -c1-7)"
-          VERSION="$(node -p "require('./package.json').version")-${SHORT_SHA}"
+          VERSION="$(node -p "require('./frontend/package.json').version")-${SHORT_SHA}"
           echo "VERSION=${VERSION}" >> "${GITHUB_ENV}"
-          cd dist
-          zip -r "../app-${VERSION}.zip" .
+          cd frontend/dist
+          zip -r "../../app-${VERSION}.zip" .
 
       - name: Create latest.json
         run: |

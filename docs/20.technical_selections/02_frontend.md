@@ -310,32 +310,35 @@ import { motion } from "framer-motion";
 
 ```plaintext
 ./
-├── src/
-│   ├── components/
-│   │   ├── ui/           # shadcn/ui components（コピー&ペースト）
-│   │   ├── chat/         # チャット関連コンポーネント
-│   │   │   ├── ChatMessage.tsx
-│   │   │   ├── ChatInput.tsx
-│   │   │   └── MessageList.tsx
-│   │   └── dashboard/    # ダッシュボード関連
-│   │       ├── MusicChart.tsx
-│   │       └── StatsCard.tsx
-│   ├── lib/
-│   │   ├── api.ts        # TanStack Query設定、APIクライアント
-│   │   └── store.ts      # Zustand store
-│   ├── hooks/
-│   │   ├── useChat.ts
-│   │   └── useMusic.ts
-│   ├── pages/
-│   │   ├── Chat.tsx
-│   │   ├── Dashboard.tsx
-│   │   └── Settings.tsx
-│   ├── App.tsx
-│   └── main.tsx
-├── capacitor.config.ts
-├── vite.config.ts
-├── tailwind.config.js
-└── package.json
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── ui/           # shadcn/ui components（コピー&ペースト）
+│   │   │   ├── chat/         # チャット関連コンポーネント
+│   │   │   │   ├── ChatMessage.tsx
+│   │   │   │   ├── ChatInput.tsx
+│   │   │   │   └── MessageList.tsx
+│   │   │   └── dashboard/    # ダッシュボード関連
+│   │   │       ├── MusicChart.tsx
+│   │   │       └── StatsCard.tsx
+│   │   ├── lib/
+│   │   │   ├── api.ts        # TanStack Query設定、APIクライアント
+│   │   │   └── store.ts      # Zustand store
+│   │   ├── hooks/
+│   │   │   ├── useChat.ts
+│   │   │   └── useMusic.ts
+│   │   ├── pages/
+│   │   │   ├── Chat.tsx
+│   │   │   ├── Dashboard.tsx
+│   │   │   └── Settings.tsx
+│   │   ├── App.tsx
+│   │   └── main.tsx
+│   ├── capacitor.config.ts
+│   ├── vite.config.ts
+│   ├── tailwind.config.js
+│   └── package.json
+└── backend/
+    └── backend/
 ```
 
 ---

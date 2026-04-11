@@ -59,22 +59,24 @@ Capacitor Plugin経由でブリッジ呼び出し
 #### ステップ 1: Web アセットビルド
 
 ```bash
+cd frontend
 npm run build
 ```
 
-Vite が React アプリをバンドル・最適化し、`dist/` に出力。
+Vite が React アプリをバンドル・最適化し、`frontend/dist/` に出力。
 TypeScript 変換、Tree-shaking、Minification、Code splitting を実行。
 
 #### ステップ 2: Capacitor 同期
 
 ```bash
+cd frontend
 npm run android:sync  # または npm run ios:sync
 ```
 
 実行内容:
 
-1. `dist/` をネイティブプロジェクトの `assets/public/` にコピー
-2. `capacitor.config.ts` をネイティブ設定ファイルに変換
+1. `frontend/dist/` をネイティブプロジェクトの `assets/public/` にコピー
+2. `frontend/capacitor.config.ts` をネイティブ設定ファイルに変換
 3. プラグイン依存をネイティブに反映
 4. ネイティブプラグインコードを配置
 
@@ -183,7 +185,7 @@ iOS / Android OS
 
 ### 6.1 設定
 
-`capacitor.config.ts` に `server.url` を追加:
+`frontend/capacitor.config.ts` に `server.url` を追加:
 
 ```typescript
 server: {
@@ -196,8 +198,8 @@ server: {
 
 1. `npm run dev` で Vite サーバー起動
 2. PC のローカル IP を確認（`ifconfig` / `ipconfig`）
-3. `capacitor.config.ts` に設定
-4. `npm run android:sync` 実行
+3. `frontend/capacitor.config.ts` に設定
+4. `cd frontend && npm run android:sync` を実行
 5. 実機/エミュレータで起動 → コード変更が即座に反映（HMR）
 
 ### 6.3 注意点
@@ -238,9 +240,9 @@ npx cap sync
 
 ### 7.3 設定
 
-`capacitor.config.ts` で更新 URL を設定する。
+`frontend/capacitor.config.ts` で更新 URL を設定する。
 EgoGraph では `CAPACITOR_UPDATER_URL` 環境変数から読み込む。
-`.env` を読み込むために `dotenv` を利用しているため、repo root の `.env` に記載すれば反映される。
+`.env` を読み込むために `dotenv` を利用しているため、`frontend/.env` に記載すれば反映される。
 `npx cap sync` やビルド時に設定しておくこと。
 
 > **注意**: `capacitor.config.ts` は Node.js で実行される設定ファイルのため、
@@ -368,12 +370,13 @@ JSON フォーマット（`latest.json`）:
 アプリ起動時に更新チェックを実装。
 詳細は [Capgo Capacitor Updater](https://github.com/Cap-go/capacitor-updater) を参照。
 
-EgoGraph では `src/main.tsx` で `notifyAppReady()` を呼び出し、
+EgoGraph では `frontend/src/main.tsx` で `notifyAppReady()` を呼び出し、
 更新適用完了を通知している。
 
 ### 7.6 デプロイフロー（R2）
 
 ```bash
+cd frontend
 npm run build                  # Webビルド
 cd dist && zip -r ../app.zip . # zip化
 ## app-<version>.zip と latest.json を R2 にアップロード
@@ -405,8 +408,8 @@ Repository Secrets:
 
 **動作**:
 
-- `endo-ava/egograph-frontend-capacitor-legacy` の repo root で `npm run build` を実行
-- `dist/` を zip 化し `app-<version>-<sha>.zip` を生成
+- `endo-ava/egograph-frontend-capacitor-legacy/frontend` で `npm run build` を実行
+- `frontend/dist/` を zip 化し `app-<version>-<sha>.zip` を生成
 - `latest.json` を生成（`url` は `R2_PUBLIC_BASE_URL` を使用）
 - R2 へアップロード（配信先: `s3://<bucket>/capacitor_updates/`）
 
@@ -421,7 +424,7 @@ Repository Secrets:
 
 ### 8.1 ビルド時環境変数
 
-Vite の環境変数を `.env` で管理し、`import.meta.env.VITE_*` で参照。
+Vite の環境変数を `frontend/.env` で管理し、`import.meta.env.VITE_*` で参照。
 
 ### 8.2 プラットフォーム別分岐
 
